@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PulseOS</title>
+<meta name="theme-color" content="#09090b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PulseOS">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>window.confetti=window.confetti||function(){}</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+:root{--bg:#f6f6f9;--card:#fff;--text:#18181b;--mut:#5b5b66;--line:rgba(0,0,0,.1);--blue:#0077c8;--green:#047857;--orange:#c2410c;--purple:#7e22ce;--btn:#0077c8;--btnt:#fff;--fs:100%;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#09090b;--card:#18181f;--text:#f4f4f5;--mut:#a1a1ad;--line:rgba(255,255,255,.1);--blue:#22d3ee;--green:#34d399;--orange:#fb923c;--purple:#c084fc;--btn:#22d3ee;--btnt:#06222a}}
+:root[data-theme="dark"]{--bg:#09090b;--card:#18181f;--text:#f4f4f5;--mut:#a1a1ad;--line:rgba(255,255,255,.1);--blue:#22d3ee;--green:#34d399;--orange:#fb923c;--purple:#c084fc;--btn:#22d3ee;--btnt:#06222a}
+html{font-size:var(--fs);height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font:400 1rem/1.5 'Plus Jakarta Sans',system-ui,sans-serif;padding-bottom:6.5rem}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+main{max-width:30rem;margin:0 auto;padding:0 1.1rem}
+header{max-width:30rem;margin:0 auto;padding:1.2rem 1.1rem .8rem;display:flex;justify-content:space-between;align-items:center;gap:.6rem}
+.eyebrow{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--blue)}
+h1{font-size:1.5rem;margin:0;font-weight:800;letter-spacing:-.02em}
+h2{font-size:1.15rem;margin:0;font-weight:800}
+h3{font-size:.8rem;margin:0;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:1.2rem;padding:1rem}
+.stack>*+*{margin-top:.75rem}
+.row{display:flex;align-items:center;gap:.75rem}.between{justify-content:space-between}.grow{flex:1;min-width:0}
+.mut{color:var(--mut);font-size:.85rem}
+.chip{display:inline-block;font-size:.68rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;padding:.1rem .55rem;border-radius:99px;background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--c)}
+.btn{background:var(--btn);color:var(--btnt);font-weight:800;border-radius:.9rem;padding:.65rem 1rem;min-height:2.75rem}
+.btn.soft{background:color-mix(in srgb,var(--c,var(--blue)) 16%,transparent);color:var(--c,var(--blue))}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+.btn.sm{padding:.4rem .8rem;min-height:2.25rem;font-size:.85rem}
+.btn.danger{--c:#ef4444}
+.btn:active{transform:scale(.97)}
+.bar{height:.7rem;border-radius:99px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--green),var(--blue));transition:width .5s}
+input[type=checkbox]{width:1.6rem;height:1.6rem;accent-color:var(--blue);flex:none}
+.field{width:100%;padding:.7rem .8rem;border-radius:.8rem;border:1px solid var(--line);background:var(--bg);min-height:2.75rem}
+label.l{display:block;font-size:.8rem;font-weight:700;color:var(--mut);margin:.7rem 0 .25rem}
+.done{text-decoration:line-through;color:var(--mut)}
+nav{position:fixed;left:0;right:0;bottom:0;background:color-mix(in srgb,var(--card) 90%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:.45rem .5rem calc(.45rem + env(safe-area-inset-bottom,0px));display:flex;justify-content:space-around;z-index:40}
+nav button{display:flex;flex-direction:column;align-items:center;gap:.05rem;padding:.2rem .6rem;color:var(--mut);font-size:.68rem;font-weight:700;min-width:3.6rem}
+nav button span{font-size:1.35rem;line-height:1.3}
+nav button.on{color:var(--blue)}
+#bg{position:fixed;inset:0;z-index:-1;display:none}body.hasbg #bg{display:block}#bg::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,var(--dim,.3))}body.hasbg .card{background:color-mix(in srgb,var(--card) 78%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.fade{animation:fade .25s ease}@keyframes fade{from{opacity:0;transform:translateY(6px)}}
+/* KNAVE backgrounds */
+.kn{background-size:300% 300%;animation:kn 9s ease infinite;color:#fff}
+@keyframes kn{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
+.kn-aurora{background-image:linear-gradient(120deg,#0f766e,#2563eb,#7c3aed,#0f766e)}
+.kn-sunset{background-image:linear-gradient(120deg,#b91c1c,#ea580c,#be185d,#b91c1c)}
+.kn-neon{background-image:linear-gradient(120deg,#111,#4c1d95,#0e7490,#111)}
+.kn-ocean{background-image:linear-gradient(120deg,#075985,#0e7490,#115e59,#075985)}
+.kn-candy{background-image:linear-gradient(120deg,#be185d,#7e22ce,#c2410c,#be185d)}
+.kn-forest{background-image:linear-gradient(120deg,#14532d,#065f46,#3f6212,#14532d)}
+.kn-grid{background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(120deg,#1e1b4b,#0f172a,#1e1b4b);background-size:1.2rem 1.2rem,1.2rem 1.2rem,300% 300%}
+.theme{border-radius:1rem;padding:.9rem;min-height:4.6rem;text-align:left;width:100%;display:flex;flex-direction:column;justify-content:flex-end;border:3px solid transparent}
+.theme.sel{border-color:var(--text)}
+.theme b{font-size:.95rem;letter-spacing:.06em}.theme small{opacity:.85;font-size:.75rem}
+#toasts{position:fixed;top:0;left:0;right:0;z-index:100;padding:calc(.6rem + env(safe-area-inset-top,0px)) .8rem 0;pointer-events:none;display:flex;flex-direction:column;gap:.5rem;align-items:center}
+.toast{pointer-events:auto;width:100%;max-width:28rem;border-radius:1.2rem;padding:.9rem 1rem .6rem;box-shadow:0 12px 36px rgba(0,0,0,.4);animation:drop .45s cubic-bezier(.2,1.3,.4,1);overflow:hidden}
+@keyframes drop{from{transform:translateY(-130%);opacity:0}}
+.toast .brand{font-size:.68rem;font-weight:800;letter-spacing:.2em;opacity:.9}
+.toast .t{font-weight:800;font-size:1.05rem;margin:.1rem 0}
+.toast .b{font-size:.9rem;opacity:.95}
+.toast .acts{display:flex;gap:.5rem;margin-top:.6rem}
+.toast .acts button{background:rgba(255,255,255,.22);border-radius:.7rem;padding:.4rem .8rem;font-weight:700;font-size:.85rem;color:#fff;min-height:2.25rem}
+.toast .life{height:.2rem;background:rgba(255,255,255,.7);margin:.6rem -1rem 0;transform-origin:left;animation:life var(--d) linear forwards}
+@keyframes life{to{transform:scaleX(0)}}
+.toast.out{transition:.3s;transform:translateY(-130%);opacity:0}
+#focus{position:fixed;inset:0;z-index:60;background:var(--bg);display:none;flex-direction:column;justify-content:space-between;padding:calc(1.2rem + env(safe-area-inset-top,0px)) 1.2rem calc(1.2rem + env(safe-area-inset-bottom,0px))}
+#focus.show{display:flex}
+.ring{position:relative;width:15rem;height:15rem;margin:1.5rem auto}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .tm{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:2.6rem;font-weight:800;font-variant-numeric:tabular-nums}
+#sheet{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center}
+#sheet.show{display:flex}
+#sheet .in{background:var(--card);width:100%;max-width:30rem;border-radius:1.5rem 1.5rem 0 0;padding:1.2rem 1.2rem calc(1.2rem + env(safe-area-inset-bottom,0px));max-height:90%;overflow:auto;animation:fade .25s}
+input[type=range]{width:100%;accent-color:var(--blue);height:2rem}
+.sw{position:relative;width:3rem;height:1.75rem;border-radius:99px;background:var(--line);flex:none;transition:.2s}
+.sw::after{content:"";position:absolute;top:.2rem;left:.2rem;width:1.35rem;height:1.35rem;border-radius:50%;background:#fff;transition:.2s}
+.sw.on{background:var(--green)}.sw.on::after{left:1.45rem}
+@media (prefers-reduced-motion:reduce){.kn,.toast,.fade{animation:none}}
+</style>
+</head>
+<body>
+<div id="toasts" aria-live="polite"></div>
+<div id="bg" aria-hidden="true"></div>
+<header>
+  <div><div class="eyebrow">PulseOS</div><h1 id="greet">Hello, Creator 👋</h1></div>
+  <div class="row">
+    <button class="btn soft sm" style="--c:var(--green)" onclick="A.tab('targets')" id="bal" aria-label="Payback balance">$0 / $235</button>
+  </div>
+</header>
+<main id="view"></main>
+<nav id="nav"></nav>
+
+<div id="focus" role="dialog" aria-modal="true">
+  <div class="row between"><span class="chip" style="--c:#ef4444">● Focus lock</span><button class="btn ghost sm" onclick="A.exitFocus()">Exit early</button></div>
+  <div style="text-align:center">
+    <h2 id="f-title"></h2><p class="mut">Stay locked in until the timer ends.</p>
+    <div class="ring"><svg viewBox="0 0 224 224"><circle cx="112" cy="112" r="100" stroke="var(--line)" stroke-width="10" fill="none"/><circle id="f-ring" cx="112" cy="112" r="100" stroke="var(--blue)" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="628.3" stroke-dashoffset="0"/></svg><div class="tm"><span id="f-time">45:00</span><span class="mut" style="font-size:.8rem;font-weight:600">remaining</span></div></div>
+  </div>
+  <button class="btn" style="width:100%;padding:1rem;font-size:1.05rem" onclick="A.finishFocus(true)">Complete session ✨</button>
+</div>
+<div id="sheet"><div class="in" id="sheet-in"></div></div>
+
+<script>
+"use strict";
+const KEY="pulseos_v3";
+/* Donation links: fill these in. venmo = username, paypal = PayPal.me name, applepay = https:// payment link (e.g. a Stripe Payment Link, which supports Apple Pay) */
+const DONATE={venmo:'',paypal:'',applepay:''};
+const THEMES=[
+ {id:"aurora",name:"KNAVE Aurora"},{id:"sunset",name:"KNAVE Sunset"},{id:"neon",name:"KNAVE Neon"},
+ {id:"ocean",name:"KNAVE Ocean"},{id:"candy",name:"KNAVE Candy"},{id:"forest",name:"KNAVE Forest"},{id:"grid",name:"KNAVE Grid"}];
+const DAYS=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const defaults=()=>({
+ tab:"schedule",
+ tasks:[
+  {id:1,title:"School hours",cat:"School/Chores",time:"08:00 AM - 02:30 PM",c:"purple",done:false,type:"daily"},
+  {id:2,title:"Chores & dog walk",cat:"School/Chores",time:"02:30 PM - 05:00 PM",c:"purple",done:false,type:"daily"},
+  {id:3,title:"DaVinci Resolve Studio edit",cat:"Video Editing",time:"05:00 PM - 06:30 PM",c:"blue",done:false,type:"daily",dur:45},
+  {id:4,title:"Family time & dinner",cat:"Family",time:"06:30 PM",c:"green",done:false,type:"daily"},
+  {id:5,title:"Weekend Resolve deep dive",cat:"Video Editing",time:"10:00 AM - 12:00 PM",c:"blue",done:false,type:"weekend",dur:60}],
+ targets:[],
+ fit:{steps:0,kcal:0,week:[
+  ["Mon","Upper body & core","25m"],["Tue","HIIT cardio blast","20m"],["Wed","Active recovery walk","30m"],["Thu","Lower body strength","25m"],
+  ["Fri","Speed & agility","20m"],["Sat","Weekend full-body","30m"],["Sun","Mobility & stretching","20m"]].map(w=>({day:w[0],name:w[1],dur:w[2],done:false}))},
+ set:{fs:100,alerts:true,system:false,vibrate:true,ring:false,tone:"chime",pattern:"double",vol:80,loop:false,accent:"",bg:"",dim:30,pop:true,popTone:"pop",ui:true,uiTone:"glass",theme:"aurora",shuffle:false,lead:10,name:"Creator"},
+ dayKey:"",weekKey:"",fired:{}
+});
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const dkey=(d=new Date())=>d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+const wkey=()=>{const d=new Date();d.setDate(d.getDate()-((d.getDay()+6)%7));return dkey(d)};
+const safe=(f,fb)=>{try{return f()}catch(e){return fb}};
+
+const A={
+ s:null,focus:null,
+ init(){
+  const d=defaults();let sv=safe(()=>JSON.parse(localStorage.getItem(KEY)),null);
+  this.s=sv?{...d,...sv,set:{...d.set,...sv.set},fit:{...d.fit,...sv.fit}}:d;if(!(sv&&sv.v4))this.s.targets=[];this.s.v4=1;document.addEventListener('pointerdown',()=>this.unlock());document.addEventListener('click',e=>this.tapSnd(e));
+  this.rollover();this.apply();this.render();window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();this.inst=e;this.render()});if(this.canPush()){navigator.serviceWorker.register('/sw.js').catch(()=>{});if(this.s.set.push)this.syncPush()}
+  setInterval(()=>this.tick(),20000);
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden){this.tick();if(this.focus)this.updFocus()}});
+  setTimeout(()=>this.tick(),1500);
+ },
+ save(){safe(()=>localStorage.setItem(KEY,JSON.stringify(this.s)));this.queueSync()},
+ rollover(){
+  const s=this.s,d=dkey(),w=wkey();
+  if(s.dayKey!==d){s.tasks.forEach(t=>t.done=false);s.fired={};s.dayKey=d}
+  if(s.weekKey!==w){s.fit.week.forEach(x=>x.done=false);s.weekKey=w}
+  this.save();
+ },
+ apply(){const r=document.documentElement.style,a=this.s.set.accent;r.setProperty('--fs',this.s.set.fs+'%');if(a){r.setProperty('--blue',a);r.setProperty('--btn',a);r.setProperty('--btnt','#0b0b10')}else['--blue','--btn','--btnt'].forEach(p=>r.removeProperty(p));$('#greet').textContent='Hello, '+this.s.set.name+' 👋';const bg=this.s.set.bg,b=$('#bg'),root=document.documentElement;b.className=bg?'kn kn-'+bg:'';document.body.classList.toggle('hasbg',!!bg);r.setProperty('--dim',this.s.set.dim/100);if(bg)root.setAttribute('data-theme','dark');else root.removeAttribute('data-theme')},
+ setBg(id){this.s.set.bg=id;this.apply();this.save();this.render()},
+ tab(t){this.s.tab=t;this.save();this.render();scrollTo(0,0)},
+ render(){
+  const s=this.s;
+  $('#bal').textContent=s.targets.length?'🎯 '+s.targets.filter(t=>t.cur>=t.max).length+'/'+s.targets.length+' goals':'🎯 No goals';
+  const tabs=[["schedule","📅","Schedule"],["targets","🎯","Targets"],["fitness","⚡","Fitness"],["knave","🔔","KNAVE"],["settings","⚙️","Settings"]];
+  $("#nav").innerHTML=tabs.map(t=>`<button class="${s.tab===t[0]?"on":""}" onclick="A.tab('${t[0]}')" ${s.tab===t[0]?'aria-current="page"':""}><span>${t[1]}</span>${t[2]}</button>`).join("");
+  $("#view").innerHTML='<div class="fade">'+this["v_"+s.tab]()+"</div>";
+ },
+ /* SCHEDULE */
+ v_schedule(){
+  const wk=[0,6].includes(new Date().getDay());
+  const rows=this.s.tasks.map(t=>{
+   const off=t.type==="weekend"&&!wk;
+   return `<div class="card row" style="${off?"opacity:.65":""}">
+   <input type="checkbox" ${t.done?"checked":""} onchange="A.toggle(${t.id})" aria-label="Done: ${esc(t.title)}">
+   <div class="grow"><span class="chip" style="--c:var(--${t.c})">${esc(t.cat)}</span>${t.type==="weekend"?' <span class="chip" style="--c:var(--orange)">Weekend</span>':""}
+   <div style="font-weight:700;margin-top:.15rem" class="${t.done?"done":""}">${esc(t.title)}</div><div class="mut">${esc(t.time)}</div></div>
+   <div class="stack" style="text-align:right">${t.dur?`<button class="btn soft sm" onclick="A.startFocus(${t.id})">▶ Focus</button>`:""}
+   <div class="row" style="justify-content:flex-end"><button class="btn ghost sm" onclick="A.taskForm(${t.id})" aria-label="Edit">✎</button><button class="btn ghost sm" onclick="A.delTask(${t.id})" aria-label="Delete">✕</button></div></div></div>`}).join("");
+  const n=this.s.tasks.filter(t=>t.done).length;
+  return `<div class="stack"><div class="row between"><div><h2>Today’s routine</h2><div class="mut">${DAYS[new Date().getDay()]} · ${n}/${this.s.tasks.length} done</div></div>
+  <div class="row"><button class="btn soft sm" onclick="A.alertSheet()">🔔 Phone alerts</button><button class="btn sm" onclick="A.taskForm()">＋ Add</button></div></div>${rows||'<p class="mut">No tasks yet.</p>'}</div>`;
+ },
+ toggle(id){const t=this.s.tasks.find(x=>x.id===id);if(!t)return;t.done=!t.done;if(t.done)confetti({particleCount:50,spread:60,origin:{y:.8}});this.save();this.render()},
+ delTask(id){this.ask("Delete this task?",()=>{this.s.tasks=this.s.tasks.filter(t=>t.id!==id);this.save();this.render()})},
+ addTask(){
+  this.sheet(`<h2>New task</h2><label class="l">Title</label><input class="field" id="a1" maxlength="60">
+  <label class="l">Category</label><input class="field" id="a2" value="Video Editing" maxlength="30">
+  <label class="l">Start time</label><input class="field" id="a3" type="time" value="16:00">
+  <label class="l">Focus timer (minutes, optional)</label><input class="field" id="a4" type="number" min="5" max="180" value="45">
+  <div class="row" style="margin-top:1rem"><button class="btn ghost grow" onclick="A.close()">Cancel</button><button class="btn grow" onclick="A.saveTask()">Add task</button></div>`);
+ },
+ saveTask(){
+  const title=$("#a1").value.trim();if(!title){$("#a1").focus();return}
+  const [h,m]=($("#a3").value||"16:00").split(":").map(Number);
+  const time=((h%12)||12).toString().padStart(2,"0")+":"+String(m).padStart(2,"0")+(h>=12?" PM":" AM");
+  const dur=parseInt($("#a4").value)||0;
+  this.s.tasks.push({id:Date.now(),title,cat:$("#a2").value.trim()||"Custom",time,c:"blue",done:false,type:"daily",...(dur?{dur}:{})});
+  this.save();this.close();this.render();
+ },
+ /* TARGETS */
+ v_targets(){
+  const p=this.s.targets.find(t=>t.id==="t1");
+  const hero=p?(()=>{const pc=Math.min(100,Math.round(p.cur/p.max*100));return `<div class="card" style="border-color:var(--green)"><div class="eyebrow" style="color:var(--green)">Primary goal</div>
+  <h2>Payback goal</h2><div class="row between" style="margin:.6rem 0 .4rem"><b style="font-size:2rem">$${p.cur}</b><span class="mut">of $${p.max} · <b style="color:var(--green)">${pc}%</b></span></div>
+  <div class="bar"><i style="width:${pc}%"></i></div></div>`})():"";
+  const list=this.s.targets.map(t=>{
+   const pc=Math.min(100,Math.round(t.cur/t.max*100));
+   return `<div class="card stack"><div class="row between"><div class="grow"><span class="chip" style="--c:var(--green)">${esc(t.cat)}</span><div style="font-weight:700">${esc(t.title)}</div></div><b>${t.cur}/${t.max}</b></div>
+   <div class="bar"><i style="width:${pc}%"></i></div>
+   <div class="row"><button class="btn soft sm grow" style="--c:var(--green)" onclick="A.bump('${t.id}',${t.money?15:1})">＋${t.money?"$15 edit gig":"1"}</button>
+   <button class="btn soft sm grow" onclick="A.bump('${t.id}',${t.money?30:5})">＋${t.money?"$30 big gig":"5"}</button>
+   <button class="btn ghost sm" onclick="A.bump('${t.id}',-1)" aria-label="Minus one">−1</button>
+   ${t.id==="t1"?"":`<button class="btn ghost sm" onclick="A.delTarget('${t.id}')" aria-label="Delete">✕</button>`}</div></div>`}).join("");
+  return `<div class="stack">${hero}<div class="row between"><h3>All targets</h3><button class="btn sm" onclick="A.addTarget()">＋ New</button></div>${list}</div>`;
+ },
+ bump(id,n){
+  const t=this.s.targets.find(x=>x.id===id);if(!t)return;const was=t.cur>=t.max;
+  t.cur=Math.max(0,Math.min(t.max,t.cur+n));
+  if(!was&&t.cur>=t.max){confetti({particleCount:150,spread:100,origin:{y:.6}});this.notify({title:"Goal complete! 🎉",body:t.title})}
+  else if(n>0)confetti({particleCount:35,spread:50,origin:{y:.7}});
+  this.save();this.render();
+ },
+ delTarget(id){this.ask("Delete this target?",()=>{this.s.targets=this.s.targets.filter(t=>t.id!==id);this.save();this.render()})},
+ addTarget(){
+  this.sheet(`<h2>New target</h2><label class="l">Name</label><input class="field" id="a1" maxlength="60">
+  <label class="l">Goal number</label><input class="field" id="a2" type="number" min="1" value="100">
+  <div class="row" style="margin-top:1rem"><button class="btn ghost grow" onclick="A.close()">Cancel</button><button class="btn grow" onclick="A.saveTarget()">Add</button></div>`);
+ },
+ saveTarget(){
+  const title=$("#a1").value.trim(),max=parseInt($("#a2").value);
+  if(!title||!max||max<1){$("#a1").focus();return}
+  this.s.targets.push({id:"t_"+Date.now(),title,cur:0,max,cat:"Custom goal"});this.save();this.close();this.render();
+ },
+ /* FITNESS */
+ v_fitness(){
+  const f=this.s.fit,n=f.week.filter(w=>w.done).length;
+  const rows=f.week.map(w=>`<div class="card row"><div class="chip" style="--c:var(--${w.done?"orange":"blue"});padding:.6rem .5rem;min-width:3rem;text-align:center">${w.day}</div>
+  <div class="grow"><div style="font-weight:700" class="${w.done?"done":""}">${esc(w.name)}</div><div class="mut">${w.dur} session</div></div>
+  <button class="btn ${w.done?"":"soft"} sm" style="--c:var(--orange);${w.done?"background:var(--orange);color:#fff":""}" onclick="A.workout('${w.day}')">${w.done?"Done ✓":"Log"}</button></div>`).join("");
+  return `<div class="stack"><div class="card" style="border-color:var(--orange)"><div class="eyebrow" style="color:var(--orange)">This week</div>
+  <h2 style="font-size:1.9rem">${n} / 7 workouts 🔥</h2><div class="bar" style="margin-top:.6rem"><i style="width:${n/7*100}%;background:var(--orange)"></i></div></div>
+  <div class="card"><h3>Today’s activity</h3><p class="mut" style="margin:.3rem 0 .6rem">Enter numbers from the Health app. (Websites can’t read Apple Health directly.)</p>
+  <div class="row"><div class="grow"><label class="l" style="margin-top:0">Steps</label><input class="field" type="number" inputmode="numeric" min="0" value="${f.steps}" onchange="A.act('steps',this.value)"></div>
+  <div class="grow"><label class="l" style="margin-top:0">Active kcal</label><input class="field" type="number" inputmode="numeric" min="0" value="${f.kcal}" onchange="A.act('kcal',this.value)"></div></div></div>
+  <h3 style="padding-top:.4rem">Weekly workouts</h3>${rows}</div>`;
+ },
+ workout(d){const w=this.s.fit.week.find(x=>x.day===d);if(!w)return;w.done=!w.done;if(w.done)confetti({particleCount:60,spread:70,origin:{y:.7}});this.save();this.render()},
+ act(k,v){this.s.fit[k]=Math.max(0,parseInt(v)||0);this.save()},
+ /* KNAVE */
+ v_knave(){
+  const st=this.s.set;
+  const cards=THEMES.map(t=>`<button class="theme kn kn-${t.id} ${st.theme===t.id?"sel":""}" onclick="A.pickTheme('${t.id}')" aria-pressed="${st.theme===t.id}"><b>${t.name}</b><small>${st.theme===t.id?"Selected":"Tap to select"}</small></button>`).join("");
+  return `<div class="stack"><div><h2>KNAVE alerts</h2><div class="mut">Every PulseOS notification wears a KNAVE background.</div></div>
+  <div class="stack">${cards}</div>
+  <button class="btn" style="width:100%" onclick="A.test()">Send test notification</button>
+  ${this.tog('shuffle','Surprise me','Pick a random KNAVE background for each alert')}${this.tog('vibrate','Buzz phone','Vibrate on alerts. Works on Android; iPhone Safari blocks web vibration.')}${this.tog('system','Phone notification','Also send a system notification (asks permission)')}${this.tog('ring','Ringtone','Play a sound with each alert')}${this.tog('loop','Alarm mode','Ring and buzz repeatedly until you tap the alert')}${this.tog('pop','Pop-up sounds','Play a sound when banners like Goal complete appear')}${this.tog('ui','Tap sounds','A soft sound whenever you tap something')}<div class="card row"><span class="grow" style="font-weight:700">Tap sound style</span><select class="field" style="width:auto" onchange="A.s.set.uiTone=this.value;A.save();A.tap(this.value)">${this.opts(Object.keys(this.UIS),st.uiTone)}</select></div><div class="card stack"><h3>Alarm tone, pop-up sound & buzz</h3><div class="row"><select class="field grow" onchange="A.s.set.tone=this.value;A.save()">${this.opts(Object.keys(this.TONES),st.tone)}</select><button class="btn soft sm" onclick="A.play(A.s.set.tone)">▶ Play</button></div><div class="row"><select class="field grow" onchange="A.s.set.pattern=this.value;A.save()">${this.opts(Object.keys(this.PATS),st.pattern)}</select><button class="btn soft sm" onclick="A.buzz()">Buzz</button></div><label class="l" style="margin:0">Pop-up sound</label><div class="row"><select class="field grow" onchange="A.s.set.popTone=this.value;A.save()">${this.opts(Object.keys(this.TONES),st.popTone)}</select><button class="btn soft sm" onclick="A.play(A.s.set.popTone)">▶ Play</button></div><label class="l" style="margin:0">Volume</label><input type="range" min="10" max="100" step="10" value="${st.vol}" onchange="A.s.set.vol=+this.value;A.save();A.play(A.s.set.tone)"></div>
+  <div class="card"><label class="l" style="margin-top:0">Remind me before tasks start: <b>${st.lead} min</b></label>
+  <input type="range" min="0" max="30" step="5" value="${st.lead}" oninput="A.s.set.lead=+this.value;this.previousElementSibling.innerHTML='Remind me before tasks start: <b>'+this.value+' min</b>'" onchange="A.save()"></div></div>`;
+ },
+ tog(k,t,d){const on=this.s.set[k];return `<button class="card row between" style="width:100%;text-align:left" onclick="A.flip('${k}')" role="switch" aria-checked="${on}"><div><div style="font-weight:700">${t}</div><div class="mut">${d}</div></div><span class="sw ${on?"on":""}"></span></button>`},
+ flip(k){
+  const st=this.s.set;st[k]=!st[k];
+  if(k==="system"&&st.system){
+   if(!("Notification" in window)){st.system=false;this.notify({title:"Not supported",body:"System notifications aren’t available here. In-app KNAVE alerts still work."})}
+   else Notification.requestPermission().then(r=>{if(r!=="granted"){st.system=false;this.save();this.render()}}).catch(()=>{st.system=false;this.save();this.render()});
+  }
+  this.save();this.render();
+ },
+ pickTheme(id){this.s.set.theme=id;this.save();this.render();this.notify({title:"Background set",body:'This is how your alerts will look.',theme:id,quiet:true})},
+ test(){this.notify({title:"Time to create ⚡",body:"Your DaVinci edit starts in 10 minutes.",actions:true})},
+ TONES:{pop:[[700,0,.08],[1000,.07,.12]],blip:[[1200,0,.08]],drop:[[900,0,.12],[500,.1,.22]],rise:[[400,0,.2],[600,.2,.2],[800,.4,.2],[1000,.6,.3]],pulse:[[880,0,.12],[880,.2,.12],[880,.4,.12],[880,.6,.12]],chime:[[880,0,.25],[1175,.2,.35]],beacon:[[660,0,.2],[660,.3,.2],[990,.6,.4]],digital:[[1000,0,.1],[1000,.15,.1],[1000,.3,.1],[1400,.45,.25]],siren:[[600,0,.3],[900,.3,.3],[600,.6,.3],[900,.9,.3]],retro:[[523,0,.15],[659,.15,.15],[784,.3,.15],[1047,.45,.3]],bell:[[1568,0,.8],[2093,0,.6]]},
+ PATS:{short:[200],double:[120,80,120],long:[600],sos:[100,60,100,60,100,200,300,60,300,60,300,200,100,60,100,60,100],heartbeat:[80,60,160,300,80,60,160]},
+ opts(a,v){return a.map(k=>`<option ${k===v?'selected':''}>${k}</option>`).join('')},
+ accent(c){this.s.set.accent=c;this.apply();this.save();this.render()},
+ unlock(){safe(()=>{this.ac=this.ac||new (window.AudioContext||window.webkitAudioContext)();if(this.ac.state==='suspended')this.ac.resume()})},
+ buzz(){if(navigator.vibrate)safe(()=>navigator.vibrate(this.PATS[this.s.set.pattern]||[200]))},
+ play(tone){this.unlock();const ac=this.ac;if(!ac)return;const v=this.s.set.vol/100*.4,sq=tone==='siren'||tone==='digital'||tone==='pulse';(this.TONES[tone]||this.TONES.chime).forEach(([f,t0,d])=>{const o=ac.createOscillator(),g=ac.createGain(),a=ac.currentTime+t0;o.type=sq?'square':'sine';o.frequency.value=f;g.gain.setValueAtTime(0,a);g.gain.linearRampToValueAtTime(v,a+.02);g.gain.exponentialRampToValueAtTime(.001,a+d);o.connect(g);g.connect(ac.destination);o.start(a);o.stop(a+d+.05)})},
+ ring(tone,el){const go=()=>{this.play(tone);if(this.s.set.loop&&this.s.set.vibrate)this.buzz()};go();if(this.s.set.loop){const id=setInterval(go,2500);el._stop=()=>clearInterval(id)}},
+ v_targets(){const f=(t,n)=>(t.unit||'')+n;const list=this.s.targets.map(t=>{const pc=t.max>0?Math.min(100,Math.round(t.cur/t.max*100)):0,st=t.steps&&t.steps.length?t.steps:[1];return `<div class="card stack"><div class="row between"><div class="grow"><span class="chip" style="--c:var(--green)">${esc(t.cat)}</span><div style="font-weight:700">${esc(t.title)}</div></div><button class="btn ghost sm" onclick="A.tgtForm('${t.id}')" aria-label="Edit target">✎</button></div><div class="row between"><div class="row"><span class="mut">Now</span><input class="field" style="width:6.5rem" type="number" inputmode="decimal" value="${t.cur}" onchange="A.setCur('${t.id}',this.value)" aria-label="Current amount"></div><b>of ${f(t,t.max)} · ${pc}%</b></div><div class="bar"><i style="width:${pc}%"></i></div><div class="row" style="flex-wrap:wrap">${st.map(n=>`<button class="btn soft sm" style="--c:var(--green)" onclick="A.nudge('${t.id}',${n})">＋${f(t,n)}</button>`).join('')}${st.map(n=>`<button class="btn soft danger sm" onclick="A.nudge('${t.id}',-${n})">−${f(t,n)}</button>`).join('')}</div><div class="row"><input class="field" style="width:6rem" type="number" inputmode="decimal" placeholder="Amount" id="c-${t.id}" aria-label="Custom amount"><button class="btn soft sm" style="--c:var(--green)" onclick="A.custom('${t.id}',1)">＋ Add</button><button class="btn soft danger sm" onclick="A.custom('${t.id}',-1)">− Take off</button></div></div>`}).join('');return `<div class="stack"><div class="row between"><h2>Targets</h2><button class="btn sm" onclick="A.tgtForm()">＋ New</button></div>${list||'<div class="card" style="text-align:center"><div style="font-size:2rem">🎯</div><div style="font-weight:700">No targets yet</div><p class="mut">Add money goals, subscriber counts, streaks, anything you want to track.</p><button class="btn" onclick="A.tgtForm()">＋ Add your first target</button></div>'}</div>`},
+ nudge(id,n){const t=this.s.targets.find(x=>x.id===id);if(!t||!isFinite(n))return;const was=t.cur>=t.max;t.cur=Math.max(0,Math.round((t.cur+n)*100)/100);this.afterTgt(t,was)},
+ setCur(id,v){const t=this.s.targets.find(x=>x.id===id);if(!t)return;const was=t.cur>=t.max,n=parseFloat(v);t.cur=isFinite(n)?Math.max(0,n):t.cur;this.afterTgt(t,was)},
+ afterTgt(t,was){if(!was&&t.max>0&&t.cur>=t.max){confetti({particleCount:150,spread:100,origin:{y:.6}});this.notify({title:'Goal complete! 🎉',body:t.title})}this.save();this.render()},
+ custom(id,sg){const i=$('#c-'+id),n=parseFloat(i&&i.value);if(!n){if(i)i.focus();return}this.nudge(id,sg*Math.abs(n))},
+ tgtForm(id){const t=this.s.targets.find(x=>x.id===id)||{};this.editId=id||'';this.sheet(`<h2>${id?'Edit target':'New target'}</h2><label class="l">Name</label><input class="field" id="g1" maxlength="60" value="${esc(t.title||'')}"><label class="l">Category</label><input class="field" id="g2" maxlength="24" value="${esc(t.cat||'Goal')}"><div class="row"><div class="grow"><label class="l">Current</label><input class="field" id="g3" type="number" inputmode="decimal" value="${t.cur||0}"></div><div class="grow"><label class="l">Goal</label><input class="field" id="g4" type="number" inputmode="decimal" value="${t.max||100}"></div></div><label class="l">Symbol before numbers (like $, optional)</label><input class="field" id="g5" maxlength="3" value="${esc(t.unit||'')}"><label class="l">Quick buttons: amounts to add or take off (comma separated)</label><input class="field" id="g6" value="${(t.steps||[1,5,10]).join(', ')}"><div class="row" style="margin-top:1rem">${id?'<button class="btn soft danger" onclick="A.delTgt()">Delete</button>':''}<button class="btn ghost grow" onclick="A.close()">Cancel</button><button class="btn grow" onclick="A.saveTgt()">Save</button></div>`)},
+ saveTgt(){const title=$('#g1').value.trim(),max=parseFloat($('#g4').value);if(!title){$('#g1').focus();return}if(!(max>0)){$('#g4').focus();return}const steps=$('#g6').value.split(/[\s,]+/).map(parseFloat).filter(n=>n>0).slice(0,6),o={title,cat:$('#g2').value.trim()||'Goal',cur:Math.max(0,parseFloat($('#g3').value)||0),max,unit:$('#g5').value.trim(),steps:steps.length?steps:[1]},t=this.s.targets.find(x=>x.id===this.editId);if(t)Object.assign(t,o);else this.s.targets.push({id:'t_'+Date.now(),...o});this.save();this.close();this.render()},
+ delTgt(){const id=this.editId;this.ask('Delete this target?',()=>{this.s.targets=this.s.targets.filter(t=>t.id!==id);this.save();this.render()})},
+ taskForm(id){const t=this.s.tasks.find(x=>x.id===id)||{},st=this.s.set,al=t.al||{buzz:st.vibrate,sys:st.system,ring:st.ring,tone:st.tone},m=/(\d+):(\d+)\s*(AM|PM)/i.exec(t.time||''),hh=m?(+m[1]%12+(m[3].toUpperCase()==='PM'?12:0)):16,val=String(hh).padStart(2,'0')+':'+(m?m[2]:'00');this.editId=id||0;this.sheet(`<h2>${id?'Edit task':'New task'}</h2><label class="l">Title</label><input class="field" id="a1" maxlength="60" value="${esc(t.title||'')}"><label class="l">Category</label><input class="field" id="a2" maxlength="30" value="${esc(t.cat||'Video Editing')}"><label class="l">Start time</label><input class="field" id="a3" type="time" value="${val}"><label class="l">Repeats</label><select class="field" id="a5"><option value="daily" ${t.type!=='weekend'?'selected':''}>Every day</option><option value="weekend" ${t.type==='weekend'?'selected':''}>Weekends only</option></select><label class="l">Color</label><select class="field" id="a6">${this.opts(['blue','green','orange','purple'],t.c)}</select><label class="l">Focus timer minutes (0 = none)</label><input class="field" id="a4" type="number" min="0" max="240" value="${id?(t.dur||0):45}"><label class="l">Alerts for this task</label><label class="row"><input type="checkbox" id="a0" ${t.al?'':'checked'}> Use my default alerts</label><label class="row"><input type="checkbox" id="ab" ${al.buzz?'checked':''}> Buzz</label><label class="row"><input type="checkbox" id="as" ${al.sys?'checked':''}> Phone notification</label><label class="row"><input type="checkbox" id="ar" ${al.ring?'checked':''}> Ringtone</label><div class="row" style="margin-top:.5rem"><select class="field grow" id="at">${this.opts(Object.keys(this.TONES),al.tone)}</select><button class="btn soft sm" onclick="A.play($('#at').value)">▶</button></div><div class="row" style="margin-top:1rem"><button class="btn ghost grow" onclick="A.close()">Cancel</button><button class="btn grow" onclick="A.saveTsk()">Save</button></div>`)},
+ saveTsk(){const title=$('#a1').value.trim();if(!title){$('#a1').focus();return}const [h,m]=($('#a3').value||'16:00').split(':').map(Number),fmt=((h%12)||12).toString().padStart(2,'0')+':'+String(m).padStart(2,'0')+(h>=12?' PM':' AM'),t=this.s.tasks.find(x=>x.id===this.editId),dur=parseInt($('#a4').value)||0,o={title,cat:$('#a2').value.trim()||'Custom',type:$('#a5').value,c:$('#a6').value,time:t?t.time.replace(/\d+:\d+\s*[AP]M/i,fmt):fmt,al:$('#a0').checked?null:{buzz:$('#ab').checked,sys:$('#as').checked,ring:$('#ar').checked,tone:$('#at').value}};if(dur)o.dur=dur;if(t){Object.assign(t,o);if(!dur)delete t.dur}else this.s.tasks.push({id:Date.now(),done:false,...o});this.save();this.close();this.render()},
+ setDon(n){this.don=n;this.render()},
+ donate(){const a=this.don||5,d=DONATE,u=s=>encodeURIComponent((s||'').replace(/^[@\/]+/,'')),chips=[3,5,10,20].map(n=>`<button class="btn ${n===a?'':'ghost'} sm" onclick="A.setDon(${n})">$${n}</button>`).join(''),L=(href,label)=>href?`<a class="btn" style="display:block;text-align:center;text-decoration:none" href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`:`<span class="btn ghost" style="display:block;text-align:center;opacity:.55">${label} · not set up yet</span>`;return `<div class="card stack"><h3>Support PulseOS ❤️</h3><p class="mut" style="margin:0">PulseOS is free. If it helps you, you can chip in. Pick an amount:</p><div class="row" style="flex-wrap:wrap">${chips}</div>${L(d.venmo&&`https://venmo.com/${u(d.venmo)}?txn=pay&amount=${a}&note=PulseOS`,'Venmo')}${L(d.paypal&&`https://paypal.me/${u(d.paypal)}/${a}`,'PayPal')}${L(/^https:\/\//.test(d.applepay)&&d.applepay,'Apple Pay')}<p class="mut" style="margin:0;font-size:.75rem">Payments happen on Venmo, PayPal or Apple Pay’s own secure pages. PulseOS never sees your payment info.</p></div>`},
+ remSheet(){const st=this.s.set,txt='Please add these PulseOS tasks to my Reminders app with an alarm '+st.lead+' minutes before each one:\n'+this.s.tasks.map(t=>'- '+t.title+' at '+t.time.split(' - ')[0]+' ('+(t.type==='weekend'?'weekends only':'repeats daily')+')').join('\n');this.sheet(`<h2>Send to Reminders</h2><p class="mut">Copy this, paste it into a chat with Claude in the Claude app, and it will add each task to your phone’s Reminders app. Reminders ring and buzz even when everything is closed.</p><textarea class="field" id="rt" rows="8" readonly style="min-height:9rem">${esc(txt)}</textarea><div class="row" style="margin-top:1rem"><button class="btn ghost grow" onclick="A.close()">Close</button><button class="btn grow" onclick="A.copyRem()">Copy</button></div>`)},
+ copyRem(){const i=$('#rt');i.select();i.setSelectionRange(0,9999);const fb=()=>safe(()=>document.execCommand('copy'));try{navigator.clipboard.writeText(i.value).catch(fb)}catch(e){fb()}this.notify({title:'Copied',body:'Paste it into Claude.',quiet:true})},
+ UIS:{tick:[1500,900,.05,'triangle'],glass:[2400,2000,.14,'sine'],bubble:[350,800,.09,'sine'],soft:[700,500,.07,'sine']},
+ tap(k,m){this.unlock();const ac=this.ac,p=this.UIS[k];if(!ac||!p)return;m=m||1;const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain(),v=this.s.set.vol/100*.3;o.type=p[3];o.frequency.setValueAtTime(p[0]*m,t);o.frequency.exponentialRampToValueAtTime(p[1]*m,t+p[2]);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+p[2]+.03);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+p[2]+.06)},
+ tapSnd(e){const st=this.s&&this.s.set;if(!st||!st.ui||!e.target.closest)return;const el=e.target.closest('button,a,label,select,input,.theme');if(!el||['range','number','text','time'].includes(el.type))return;const n=Date.now();if(n-(this.lt||0)<80)return;this.lt=n;this.tap(st.uiTone,el.matches('[role=switch],input[type=checkbox]')?1.3:1)},
+ alertSheet(){const lead=this.s.set.lead,and=/android/i.test(navigator.userAgent),p=n=>String(n).padStart(2,'0'),d=new Date(),ds=''+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate()),ts=m=>ds+'T'+p(Math.floor(m/60))+p(m%60)+'00',ic=s=>s.replace(/[,;\\]/g,'\\$&'),stamp=new Date().toISOString().replace(/[-:]|\.\d+/g,'');const a=(h,l)=>`<a class="btn soft sm" style="text-decoration:none" target="_blank" rel="noopener noreferrer" href="${h}">${l}</a>`;const rows=this.s.tasks.map(t=>{const m=this.startMin(t.time),e=Math.min(1439,m+(t.dur||30)),wk=t.type==='weekend',rule=wk?'FREQ=WEEKLY;BYDAY=SA,SU':'FREQ=DAILY',g='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(t.title)+'&dates='+ts(m)+'/'+ts(e)+'&recur='+encodeURIComponent('RRULE:'+rule)+'&details='+encodeURIComponent('From PulseOS'),ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//PulseOS//EN','BEGIN:VEVENT','UID:'+t.id+'@pulseos','DTSTAMP:'+stamp,'DTSTART:'+ts(m),'DTEND:'+ts(e),'SUMMARY:'+ic(t.title),'RRULE:'+rule,...(lead?['BEGIN:VALARM','TRIGGER:-PT'+lead+'M','ACTION:DISPLAY','DESCRIPTION:'+ic(t.title),'END:VALARM']:[]),'BEGIN:VALARM','TRIGGER:PT0M','ACTION:DISPLAY','DESCRIPTION:'+ic(t.title),'END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n'),al='intent:#Intent;action=android.intent.action.SET_ALARM;i.android.intent.extra.alarm.HOUR='+Math.floor(m/60)+';i.android.intent.extra.alarm.MINUTES='+(m%60)+';S.android.intent.extra.alarm.MESSAGE='+encodeURIComponent(t.title)+';end';return `<div class="card stack" style="padding:.8rem"><div><b>${esc(t.title)}</b><div class="mut">${esc(t.time.split(' - ')[0])} · ${wk?'weekends':'every day'}</div></div><div class="row" style="flex-wrap:wrap">${a(g,'Google Calendar')}${a('data:text/calendar;charset=utf-8,'+encodeURIComponent(ics),'Apple Calendar')}${and?a(al,'Set alarm'):''}</div></div>`}).join('');this.sheet(`<h2>Phone alerts</h2><p class="mut">Add a task to your phone’s own calendar or clock. They alert you with sound and buzz even when PulseOS is closed. Apple Calendar events alert ${lead?lead+' minutes before and at start time':'at start time'}. Google Calendar uses its own default alert time. Set alarm (Android) makes a one-time alarm.</p><div class="stack">${rows||'<p class="mut">No tasks yet.</p>'}</div><button class="btn ghost" style="width:100%;margin-top:1rem" onclick="A.close()">Done</button>`)},
+ install(){const i=this.inst;this.inst=null;if(i)i.prompt();this.render()},
+ b2u(s){s=s.replace(/-/g,'+').replace(/_/g,'/');return Uint8Array.from(atob(s+'='.repeat((4-s.length%4)%4)),c=>c.charCodeAt(0))},
+ canPush(){return 'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window},
+ ios(){return /iphone|ipad|ipod/i.test(navigator.userAgent)},
+ standalone(){return navigator.standalone===true||matchMedia('(display-mode: standalone)').matches},
+ startMin(time){const m=/(\d+):(\d+)\s*(AM|PM)/i.exec(time||'');return m?((+m[1]%12)+(m[3].toUpperCase()==='PM'?12:0))*60+ +m[2]:540},
+ queueSync(){if(!this.s||!this.s.set.push)return;clearTimeout(this.qs);this.qs=setTimeout(()=>this.syncPush(),1500)},
+ async api(path,body){return fetch(path,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)})},
+ async syncPush(sub){const s=this.s.set;if(!s.push||!this.canPush())return;try{const reg=await navigator.serviceWorker.ready;sub=sub||await reg.pushManager.getSubscription();if(!sub)return;await this.api('/api/sync',{endpoint:sub.endpoint,tz:Intl.DateTimeFormat().resolvedOptions().timeZone,lead:s.lead,nag:!!s.loop,vibrate:this.PATS[s.pattern]||[200],tasks:this.s.tasks.map(t=>({id:t.id,title:t.title,type:t.type,start:this.startMin(t.time),done:t.done?dkey():''}))})}catch(e){}},
+ async enablePush(){try{if(!this.canPush()){this.pushMsg=this.ios()&&!this.standalone()?'On iPhone, first tap Share, then Add to Home Screen. Open PulseOS from your Home Screen and try again.':'This browser does not support background alerts.';return this.render()}const reg=await navigator.serviceWorker.register('/sw.js');await navigator.serviceWorker.ready;if(await Notification.requestPermission()!=='granted'){this.pushMsg='Notifications are blocked. Allow them in your phone or browser settings, then try again.';return this.render()}const {publicKey}=await (await fetch('/api/config')).json();const sub=(await reg.pushManager.getSubscription())||await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:this.b2u(publicKey)});this.s.set.push=true;this.save();await this.syncPush(sub);this.pushMsg='Background alerts are on. Send a test to check.'}catch(e){this.pushMsg='Could not turn on alerts: '+(e&&e.message||e)}this.render()},
+ async testPush(){try{const reg=await navigator.serviceWorker.ready,sub=await reg.pushManager.getSubscription();if(!sub){this.pushMsg='Turn on background alerts first.';return this.render()}await this.syncPush(sub);const r=await this.api('/api/test',{endpoint:sub.endpoint});this.pushMsg=r.ok?'Test sent. It should arrive in a few seconds, even if you close the app.':'Test failed. Try turning alerts off and on.'}catch(e){this.pushMsg='Test failed: '+e.message}this.render()},
+ async disablePush(){try{const reg=await navigator.serviceWorker.ready,sub=await reg.pushManager.getSubscription();if(sub){await this.api('/api/unsubscribe',{endpoint:sub.endpoint});await sub.unsubscribe()}}catch(e){}this.s.set.push=false;this.save();this.pushMsg='Background alerts are off.';this.render()},
+ /* NOTIFY */
+ notify({title,body,theme,actions,al,quiet}){
+  const st=this.s.set;if(!st.alerts&&!theme&&!actions)return;
+  const id=theme||(st.shuffle?THEMES[Math.random()*THEMES.length|0].id:st.theme);
+  const name=(THEMES.find(t=>t.id===id)||THEMES[0]).name;
+  const el=document.createElement("div");el.className=`toast kn kn-${id}`;el.style.setProperty("--d","7s");
+  el.innerHTML=`<div class="brand">${name.toUpperCase()}</div><div class="t">${esc(title)}</div><div class="b">${esc(body)}</div>
+  ${actions?`<div class="acts"><button data-a="snooze">Snooze 5m</button><button data-a="ok">Got it</button></div>`:""}<div class="life"></div>`;
+  const kill=()=>{if(el._stop)el._stop();el.classList.add('out');setTimeout(()=>el.remove(),300)};
+  el.addEventListener("click",e=>{const a=e.target.dataset&&e.target.dataset.a;if(a==="snooze")setTimeout(()=>this.notify({title,body:body+' (snoozed)',theme:id,al,actions:true}),300000);kill()});
+  $('#toasts').appendChild(el);const c={buzz:st.vibrate,sys:st.system,ring:st.ring,tone:st.tone,...(quiet?{buzz:false,sys:false,ring:false}:{}),...(al||{})};if(!(c.ring&&st.loop))setTimeout(kill,7000);if(c.buzz)this.buzz();if(c.ring)this.ring(c.tone,el);else if(!actions&&st.pop)this.play(st.popTone);
+  
+  if(c.sys&&'Notification' in window&&Notification.permission==='granted')safe(()=>new Notification(name+" · "+title,{body}));
+ },
+ tick(){
+  this.rollover();const now=new Date(),mins=now.getHours()*60+now.getMinutes(),st=this.s.set;
+  if(!st.alerts)return;
+  this.s.tasks.forEach(t=>{
+   if(t.done||(t.type==="weekend"&&![0,6].includes(now.getDay())))return;
+   const m=/(\d+):(\d+)\s*(AM|PM)/i.exec(t.time);if(!m)return;
+   let h=+m[1]%12+(m[3].toUpperCase()==="PM"?12:0);const start=h*60+ +m[2];
+   const k=t.id+"@"+st.lead;
+   if(!this.s.fired[k]&&mins>=start-st.lead&&mins<start+5){
+    this.s.fired[k]=1;this.save();
+    this.notify({title:t.title,body:mins>=start?"Starting now":`Starts in ${start-mins} min`,actions:true,al:t.al});
+   }
+  });
+ },
+ /* SETTINGS */
+ v_settings(){
+  const st=this.s.set;
+  return `<div class="stack"><h2>Settings</h2>
+  <div class="card"><h3>Reading size</h3><div class="row" style="margin:.5rem 0"><button class="btn ghost sm" onclick="A.size(-10)" aria-label="Smaller">A−</button>
+  <input type="range" min="85" max="150" step="5" value="${st.fs}" oninput="A.size(0,+this.value)" aria-label="Font size"><button class="btn ghost sm" onclick="A.size(10)" aria-label="Larger">A+</button></div>
+  <div class="mut" id="fs-l">Text size: ${st.fs}%</div></div>
+  <div class="card"><h3>Screen background</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.6rem"><button class="theme" style="min-height:3.4rem;background:var(--bg);border-color:${st.bg?'var(--line)':'var(--text)'}" onclick="A.setBg('')"><b>None</b></button>${THEMES.map(t=>`<button class="theme kn kn-${t.id} ${st.bg===t.id?'sel':''}" style="min-height:3.4rem" onclick="A.setBg('${t.id}')"><b style="font-size:.8rem">${t.name}</b></button>`).join('')}</div><label class="l">Dimming: <b>${st.dim}%</b></label><input type="range" min="0" max="70" step="5" value="${st.dim}" oninput="A.s.set.dim=+this.value;A.apply();this.previousElementSibling.innerHTML='Dimming: <b>'+this.value+'%</b>'" onchange="A.save()"></div><div class="card"><h3>Accent color</h3><div class="row" style="margin-top:.6rem;flex-wrap:wrap">${['','#8b5cf6','#ec4899','#f97316','#10b981','#3b82f6'].map(c=>`<button aria-label="Accent ${c||'default'}" onclick="A.accent('${c}')" style="width:2.6rem;height:2.6rem;border-radius:50%;border:3px solid ${st.accent===c?'var(--text)':'transparent'};background:${c||'var(--blue)'}"></button>`).join('')}</div></div><div class="card"><label class="l" style="margin-top:0">Your name</label><input class="field" value="${esc(st.name)}" maxlength="20" onchange="A.s.set.name=this.value.trim()||'Creator';A.save();A.apply()"></div>
+  ${this.tog("alerts","Alerts","Task reminders as KNAVE banners")}
+  <div class="card stack"><h3>Background alerts</h3><p class="mut" style="margin:0">Get task alerts on this phone even when PulseOS is closed.${this.ios()&&!this.standalone()?' On iPhone, first add PulseOS to your Home Screen (Share, then Add to Home Screen) and open it from there.':''}</p>${this.inst?'<button class="btn soft" onclick="A.install()">Install PulseOS</button>':''}${this.pushMsg?`<p style="margin:0;font-weight:600">${esc(this.pushMsg)}</p>`:''}${st.push?'<div class="row"><button class="btn grow" onclick="A.testPush()">Send test alert</button><button class="btn ghost grow" onclick="A.disablePush()">Turn off</button></div>':'<button class="btn" onclick="A.enablePush()">Turn on background alerts</button>'}<p class="mut" style="margin:0;font-size:.8rem">Closed-app alerts use your phone\u2019s notification sound. Alarm mode repeats the alert a few times until you tap it.</p></div>
+  
+  <div class="card"><h3>Add to Home Screen</h3><p class="mut" style="margin:.4rem 0 0">iPhone: open this page in Safari, tap Share, then <b>Add to Home Screen</b>. Android: browser menu, then <b>Install app</b>. It opens full screen like an app.</p></div>
+  ${this.donate()}<button class="btn soft danger" style="width:100%" onclick="A.reset()">Reset all app data</button></div>`;
+ },
+ size(d,v){
+  const n=Math.max(85,Math.min(150,v||this.s.set.fs+d));this.s.set.fs=n;this.apply();this.save();
+  if(v){const l=$("#fs-l");if(l)l.textContent="Text size: "+n+"%"}else this.render();
+ },
+ reset(){this.ask("Reset all tasks, goals and settings?",()=>{safe(()=>localStorage.removeItem(KEY));this.s=defaults();this.rollover();this.apply();this.render()})},
+ /* FOCUS (timestamp based, survives background/lock) */
+ startFocus(id){
+  const t=this.s.tasks.find(x=>x.id===id);if(!t)return;
+  const total=(t.dur||45)*60;this.focus={id,total,end:Date.now()+total*1000};
+  $("#f-title").textContent=t.title;$("#focus").classList.add("show");
+  clearInterval(this.fi);this.fi=setInterval(()=>this.updFocus(),500);this.updFocus();
+ },
+ updFocus(){
+  if(!this.focus)return;const left=Math.max(0,Math.ceil((this.focus.end-Date.now())/1000));
+  $("#f-time").textContent=String(Math.floor(left/60)).padStart(2,"0")+":"+String(left%60).padStart(2,"0");
+  $("#f-ring").style.strokeDashoffset=628.3*(1-left/this.focus.total);
+  if(left<=0)this.finishFocus(true);
+ },
+ exitFocus(){this.ask("Exit focus session early?",()=>this.finishFocus(false))},
+ finishFocus(ok){
+  if(!this.focus)return;clearInterval(this.fi);const f=this.focus;this.focus=null;$("#focus").classList.remove("show");
+  if(ok){const t=this.s.tasks.find(x=>x.id===f.id);if(t)t.done=true;confetti({particleCount:200,spread:120,origin:{y:.5}});this.notify({title:"Session complete ✨",body:"Nice work, you stayed locked in."})}
+  this.save();this.render();
+ },
+ /* SHEET */
+ sheet(h){$("#sheet-in").innerHTML=h;$("#sheet").classList.add("show");const i=$("#sheet-in input");if(i)setTimeout(()=>i.focus(),50)},
+ close(){$("#sheet").classList.remove("show")},
+ ask(msg,yes){
+  this.yes=()=>{this.close();yes()};
+  this.sheet(`<h2>${esc(msg)}</h2><div class="row" style="margin-top:1rem"><button class="btn ghost grow" onclick="A.close()">Cancel</button><button class="btn grow" onclick="A.yes()">Confirm</button></div>`);
+ }
+};
+$("#sheet").addEventListener("click",e=>{if(e.target.id==="sheet")A.close()});
+A.init();
+</script>
+</body>
+</html>
